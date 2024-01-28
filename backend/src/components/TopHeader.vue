@@ -12,7 +12,7 @@
                     src="https://randomuser.me/api/portraits/men/1.jpg"
                     class="rounded-full w-8 mr-2"
                 />
-                <small>John Smith</small>
+                <small>{{ currentUser.name }}</small>
                 <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" />
             </MenuButton>
             <transition
@@ -67,6 +67,9 @@
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import store from "../store";
 import router from "../router";
+import { computed } from "vue";
+
+const currentUser = computed(() => store.state.user.data);
 
 const emit = defineEmits(["toggle-sidebar"]);
 
