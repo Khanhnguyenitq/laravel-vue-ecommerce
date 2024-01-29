@@ -10,6 +10,10 @@ import NotFound from "../views/404.vue";
 
 const routes = [
     {
+        path: "/",
+        redirect: "/app",
+    },
+    {
         path: "/app",
         name: "app",
         component: AppLayout,
