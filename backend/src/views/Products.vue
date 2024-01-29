@@ -40,21 +40,60 @@
             <table class="table-auto w-full">
                 <thead>
                     <tr>
-                        <th class="border-b-2 p-2 text-left">ID</th>
-                        <th class="border-b-2 p-2 text-left">Image</th>
-                        <th class="border-b-2 p-2 text-left">Title</th>
-                        <th class="border-b-2 p-2 text-left">Price</th>
-                        <th class="border-b-2 p-2 text-left">
+                        <TableHeaderCell
+                            field="id"
+                            :sort-field="sortField"
+                            :sort-direction="sortDirection"
+                            @click="sortProducts('id')"
+                        >
+                            ID
+                        </TableHeaderCell>
+                        <TableHeaderCell
+                            field="image"
+                            :sort-field="sortField"
+                            :sort-direction="sortDirection"
+                        >
+                            Image
+                        </TableHeaderCell>
+                        <TableHeaderCell
+                            field="title"
+                            :sort-field="sortField"
+                            :sort-direction="sortDirection"
+                            @click="sortProducts('title')"
+                        >
+                            Title
+                        </TableHeaderCell>
+                        <TableHeaderCell
+                            field="price"
+                            :sort-field="sortField"
+                            :sort-direction="sortDirection"
+                            @click="sortProducts('price')"
+                        >
+                            Price
+                        </TableHeaderCell>
+                        <TableHeaderCell
+                            field="updated_at"
+                            :sort-field="sortField"
+                            :sort-direction="sortDirection"
+                            @click="sortProducts('updated_at')"
+                        >
                             Last Updated At
-                        </th>
+                        </TableHeaderCell>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="products.loading">
+                    <tr>
+                        <td colspan="5">
+                            <Spinner />
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
                     <tr v-for="product of products.data">
                         <td class="border-b p-2">{{ product.id }}</td>
                         <td class="border-b p-2">
                             <img
-                                class="w-16"
+                                class="w-16 h-16 object-cover"
                                 :src="product.image"
                                 :alt="product.title"
                             />
@@ -74,7 +113,10 @@
                 </tbody>
             </table>
 
-            <div class="flex justify-between items-center mt-5">
+            <div
+                v-if="!products.loading"
+                class="flex justify-between items-center mt-5"
+            >
                 <span>
                     Showing from {{ products.from }} to {{ products.to }}
                 </span>
@@ -115,10 +157,15 @@ import { computed, onMounted, ref } from "vue";
 import store from "../store";
 import Spinner from "../components/core/Spinner.vue";
 import { PRODUCTS_PER_PAGE } from "../constant";
+import TableHeaderCell from "../components/core/Table/TableHeaderCell.vue";
 
 const perPage = ref(PRODUCTS_PER_PAGE);
 const search = ref("");
 const products = computed(() => store.state.products);
+
+const sortField = ref("updated_at");
+const sortDirection = ref("desc");
+
 onMounted(() => {
     getProducts();
 });
@@ -134,6 +181,22 @@ function getProducts(url = null) {
         url,
         search: search.value,
         perPage: perPage.value,
+        sort_field: sortField.value,
+        sort_direction: sortDirection.value,
     });
+}
+
+function sortProducts(field) {
+    if (field === sortField.value) {
+        if (sortDirection.value === "desc") {
+            sortDirection.value = "asc";
+        } else {
+            sortDirection.value = "desc";
+        }
+    } else {
+        sortField.value = field;
+        sortDirection.value = "asc";
+    }
+    getProducts();
 }
 </script>
