@@ -13,7 +13,6 @@ export function setToken(state, token) {
 
 export function setProducts(state, [loading, data = null]) {
     if (data) {
-        console.log(data);
         state.products = {
             ...state.products,
             data: data.data,
