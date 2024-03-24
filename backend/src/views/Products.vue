@@ -182,11 +182,12 @@ function getProducts(url = null) {
     store.dispatch("getProducts", {
         url,
         search: search.value,
-        perPage: perPage.value,
+        per_page: perPage.value,
         sort_field: sortField.value,
         sort_direction: sortDirection.value,
     });
 }
+
 
 function sortProducts(field) {
     if (field === sortField.value) {

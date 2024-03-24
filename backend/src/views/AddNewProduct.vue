@@ -31,6 +31,10 @@
                         <DialogPanel
                             class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full"
                         >
+                            <Spinner
+                                v-if="loading"
+                                class="absolute left-0 top-0 bg-white right-0 bottom-0 flex items-center justify-center"
+                            />
                             <header
                                 class="py-3 px-4 flex justify-between items-center"
                             >
@@ -70,6 +74,14 @@
                                         label="Product Title"
                                     />
                                     <CustomInput
+                                        type="file"
+                                        class="mb-2"
+                                        label="Product Image"
+                                        @change="
+                                            (file) => (product.image = file)
+                                        "
+                                    />
+                                    <CustomInput
                                         type="textarea"
                                         class="mb-2"
                                         v-model="product.description"
@@ -80,11 +92,6 @@
                                         class="mb-2"
                                         v-model="product.price"
                                         label="Price"
-                                    />
-                                    <CustomInput
-                                        class="mb-2"
-                                        v-model="product.title"
-                                        label="Product Title"
                                     />
                                 </div>
                                 <footer
@@ -125,12 +132,16 @@ import {
 } from "@headlessui/vue";
 import CustomInput from "../components/core/CustomInput.vue";
 import store from "../store/index.js";
+import Spinner from "../components/core/Spinner.vue";
+
 const product = ref({
     title: null,
     image: null,
     description: null,
     price: null,
 });
+
+const loading = ref(false);
 const props = defineProps({
     modelValue: Boolean,
 });
@@ -143,12 +154,19 @@ function closeModal() {
     show.value = false;
 }
 function onSubmit() {
-    store.dispatch("createProduct", product.value).then((response) => {
-        debugger;
-        if (response.status === 201) {
-            // TODO show notification
-            store.dispatch("getProducts");
-        }
-    });
+    store
+        .dispatch("createProduct", product.value)
+        .then((response) => {
+            console.log(response);
+            loading.value = false;
+            if (response.status === 201) {
+                // TODO show notification
+                store.dispatch("getProducts");
+                closeModal();
+            }
+        })
+        .catch((err) => {
+            loading.value = false;
+        });
 }
 </script>
