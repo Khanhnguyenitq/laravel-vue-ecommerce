@@ -255,6 +255,8 @@ const showProductModal = ref(false);
 
 const product = ref({});
 
+const emit = defineEmits(['clickEdit'])
+
 onMounted(() => {
     getProducts();
 });
@@ -302,9 +304,10 @@ function deleteProduct(product) {
 }
 
 function editProduct(p) {
-    store.dispatch("getProduct", p.id).then(({ data }) => {
-        product.value = data;
-        showAddNewModal();
-    });
+    // store.dispatch("getProduct", p.id).then(({ data }) => {
+    //     product.value = data;
+    //     showAddNewModal();
+    // });
+    emit('clickEdit', p)
 }
 </script>
