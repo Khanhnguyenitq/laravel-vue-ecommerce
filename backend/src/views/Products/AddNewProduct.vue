@@ -134,9 +134,9 @@ import {
     TransitionChild,
     TransitionRoot,
 } from "@headlessui/vue";
-import CustomInput from "../components/core/CustomInput.vue";
-import store from "../store/index.js";
-import Spinner from "../components/core/Spinner.vue";
+import CustomInput from "../../components/core/CustomInput.vue";
+import store from "../../store/index.js";
+import Spinner from "../../components/core/Spinner.vue";
 
 const props = defineProps({
     modelValue: Boolean,

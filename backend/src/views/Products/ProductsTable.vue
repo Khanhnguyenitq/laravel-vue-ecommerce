@@ -1,14 +1,4 @@
 <template>
-    <div class="flex items-center justify-between mb-3">
-        <h1 class="text-3xl font-semibold">Products</h1>
-        <button
-            type="submit"
-            @click="showAddNewModal()"
-            class="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-            Add new Product
-        </button>
-    </div>
     <div class="bg-white p-4 rounded-lg shadow">
         <div class="flex justify-between border-b-2 pb-3">
             <div class="flex items-center">
@@ -24,6 +14,7 @@
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
+                <span class="ml-3">Found {{ products.total }} products</span>
             </div>
             <div>
                 <input
@@ -83,10 +74,13 @@
                         </TableHeaderCell>
                     </tr>
                 </thead>
-                <tbody v-if="products.loading">
+                <tbody v-if="products.loading || !products.data.length">
                     <tr>
                         <td colspan="6">
-                            <Spinner />
+                            <Spinner v-if="products.loading" />
+                            <p v-else class="text-center py-8 text-gray-700">
+                                There are no products
+                            </p>
                         </td>
                     </tr>
                 </tbody>
@@ -207,9 +201,9 @@
                 v-if="!products.loading"
                 class="flex justify-between items-center mt-5"
             >
-                <span>
+                <div v-if="products.data.length">
                     Showing from {{ products.from }} to {{ products.to }}
-                </span>
+                </div>
                 <nav
                     v-if="products.total > products.limit"
                     class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
@@ -239,16 +233,15 @@
                 </nav>
             </div>
         </template>
-        <AddNewProduct v-model="showProductModal" :product="product" />
     </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import store from "../store";
-import Spinner from "../components/core/Spinner.vue";
-import { PRODUCTS_PER_PAGE } from "../constant";
-import TableHeaderCell from "../components/core/Table/TableHeaderCell.vue";
+import store from "../../store";
+import Spinner from "../../components/core/Spinner.vue";
+import { PRODUCTS_PER_PAGE } from "../../constant";
+import TableHeaderCell from "../../components/core/Table/TableHeaderCell.vue";
 import AddNewProduct from "./AddNewProduct.vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 
