@@ -151,6 +151,9 @@
                                                             : 'text-gray-900',
                                                         'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                                     ]"
+                                                    @click="
+                                                        editProduct(product)
+                                                    "
                                                 >
                                                     <!-- <PencilIcon
                                                         :active="active"
@@ -236,7 +239,7 @@
                 </nav>
             </div>
         </template>
-        <AddNewProduct v-model="showProductModal" />
+        <AddNewProduct v-model="showProductModal" :product="product" />
     </div>
 </template>
 
@@ -256,6 +259,8 @@ const products = computed(() => store.state.products);
 const sortField = ref("updated_at");
 const sortDirection = ref("desc");
 const showProductModal = ref(false);
+
+const product = ref({});
 
 onMounted(() => {
     getProducts();
@@ -300,6 +305,13 @@ function deleteProduct(product) {
     }
     store.dispatch("deleteProduct", product.id).then((res) => {
         store.dispatch("getProducts");
+    });
+}
+
+function editProduct(p) {
+    store.dispatch("getProduct", p.id).then(({ data }) => {
+        product.value = data;
+        showAddNewModal();
     });
 }
 </script>

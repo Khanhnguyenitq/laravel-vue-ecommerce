@@ -89,7 +89,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
         $product = Product::find($id);
 
@@ -97,7 +97,27 @@ class ProductController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        $product->update($request->validated());
+        $validatedData = $request->validated();
+
+        $product->fill($validatedData);
+        $product->updated_by = $request->user()->id;
+
+        // Xử lý ảnh
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $relativePath = $this->saveImage($image);
+
+            $product->image = $relativePath;
+            $product->image_mime = $image->getClientMimeType();
+            $product->image_size = $image->getSize();
+
+            // Xóa ảnh cũ
+            if ($product->image) {
+                Storage::delete('/public/' . dirname($product->image));
+            }
+        }
+
+        $product->save();
 
         return new ProductResource($product);
     }
