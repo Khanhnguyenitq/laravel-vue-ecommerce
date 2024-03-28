@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -54,7 +55,7 @@ class ProductController extends Controller
         // Check if image was given and save on local file system
         if ($image) {
             $relativePath = $this->saveImage($image);
-            $data['image'] = $relativePath;
+            $data['image'] = URL::to(Storage::url($relativePath));
             $data['image_mime'] = $image->getClientMimeType();
             $data['image_size'] = $image->getSize();
         }
@@ -107,7 +108,7 @@ class ProductController extends Controller
             $image = $request->file('image');
             $relativePath = $this->saveImage($image);
 
-            $product->image = $relativePath;
+            $product->image = URL::to(Storage::url($relativePath));
             $product->image_mime = $image->getClientMimeType();
             $product->image_size = $image->getSize();
 
