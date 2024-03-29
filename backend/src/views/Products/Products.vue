@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import store from "../../store";
 import AddNewProduct from "./AddNewProduct.vue";
 import ProductsTable from "./ProductsTable.vue";
@@ -33,7 +33,6 @@ const DEFAULT_PRODUCT = {
 
 const productModel = ref({ ...DEFAULT_PRODUCT });
 
-const products = computed(() => store.state.products);
 const showProductModal = ref(false);
 
 function showAddNewModal() {

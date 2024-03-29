@@ -242,7 +242,6 @@ import store from "../../store";
 import Spinner from "../../components/core/Spinner.vue";
 import { PRODUCTS_PER_PAGE } from "../../constant";
 import TableHeaderCell from "../../components/core/Table/TableHeaderCell.vue";
-import AddNewProduct from "./AddNewProduct.vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 
 const perPage = ref(PRODUCTS_PER_PAGE);
